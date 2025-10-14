@@ -1,0 +1,58 @@
+Scope and Timebox
+Target 4–8 hours of focused engineering, with a submission window of up to 72 hours. Partial
+but well‑documented solutions are acceptable. Prioritize correctness, grounding, evaluation, and
+clear tradeoffs over UI polish or extensive infrastructure.
+What to Build
+● A polite crawler that respects robots.txt, stays within the registrable domain of the
+starting URL, and collects up to 30–50 pages, extracting main content and reducing
+boilerplate where possible.
+● An indexing step that chunks text, computes embeddings, and writes to a vector index
+suitable for similarity search, with a short note justifying chunk size and overlap.
+● A question‑answering API or CLI that retrieves top‑k chunks, constructs a grounded
+prompt, generates an answer, and returns the answer with source URLs, snippet
+highlights, and basic timing.
+Constraints
+● Input: one primary URL provided at evaluation time, with an optional second URL for
+robustness; the system must limit scope to the same registrable domain and enforce a
+hard page cap.
+● Content types: focus on HTML text; multi-media, binary files and heavy client‑side
+rendering are optional and not required under the timebox.
+● Politeness: implement a crawl delay or concurrency limit and document choices to avoid
+overloading hosts.
+Functional Requirements
+● Crawl: accept a starting URL, crawl within domain up to N pages, store normalized page
+text, and persist a URL‑to‑document mapping for citations.
+● Index: chunk text (for example, 500–1,000 characters with small overlap), embed, and
+store vectors; document chunking and embedding choices in the README.
+● Ask: accept a question, retrieve top‑k chunks, build a grounded prompt that answers
+only from provided context, and return JSON with the answer, list of source URLs and
+snippets, and response timings.
+Non‑Functional Requirements
+● Grounding and refusals: answer only from retrieved context; if insufficient evidence,
+respond with a clear refusal such as “not found in crawled content,” including the closest
+retrieved snippets.
+● Observability: log retrieval latency, generation latency, end‑to‑end p50 and p95 latency
+over a small query batch, error states, and token usage or cost if available.
+Safety and Guardrails
+● Prompt hardening: instruct the model to ignore any instructions found within crawled
+pages that attempt to alter behavior and to never execute or follow page directives.
+● Content boundaries: restrict answers to the crawled domain and refuse when a query
+requires off‑site or missing information.
+API or CLI Specification
+● POST /crawl { start_url, max_pages, max_depth, crawl_delay_ms } → { page_count,
+skipped_count, urls: [...] }
+● POST /index { chunk_size, chunk_overlap, embedding_model } → { vector_count,
+errors: [...] }
+● POST /ask { question, top_k } → { answer, sources: [{ url, snippet }], timings: {
+retrieval_ms, generation_ms, total_ms } }
+CLI equivalents are acceptable if HTTP is not implemented.
+Deliverables
+● Repository with source, scripts, and tests, plus a concise README covering setup, run,
+evaluate, architecture description, and tradeoffs in 10–15 bullets.
+● API or CLI samples or Evals: provide example requests and responses for crawl, index,
+and ask, including at least two example answers with cited URLs and snippets, one of
+which demonstrates a refusal.
+OR
+Demo: a 3–5 minute screen recording showing crawl, index, two ask calls (one
+answerable, one unanswerable), and a quick walk‑through of the metrics report.
+● DO NOT include anything that you don’t understand, including code, content, tools, etc.

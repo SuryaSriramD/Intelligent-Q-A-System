@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG API - Intelligent Q&A System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input[type="url"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="url"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .status-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .status-box.show {
+            display: block;
+        }
+
+        .status-box.success {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .status-box.error {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .status-box.loading {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .answer-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .answer-box.show {
+            display: block;
+        }
+
+        .answer-content {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .sources {
+            margin-top: 20px;
+        }
+
+        .source-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 3px solid #667eea;
+        }
+
+        .source-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .source-url {
+            color: #667eea;
+            font-size: 0.9rem;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .source-url:hover {
+            text-decoration: underline;
+        }
+
+        .source-snippet {
+            color: #666;
+            font-size: 0.95rem;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .timing {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .qa-section {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .qa-section.enabled {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .history {
+            margin-top: 30px;
+        }
+
+        .history-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .history-question {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .history-answer {
+            color: #666;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Intelligent Q&A System</h1>
+            <p>Crawl any website and ask questions about its content</p>
+        </div>
+
+        <div class="main-card">
+            <!-- Step 1: Crawl & Index -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="badge">Step 1</span>
+                    <span>Crawl & Index Website</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="url">Website URL</label>
+                    <input type="url" id="url" placeholder="https://example.com" 
+                           value="https://www.republicworld.com/">
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="maxPages">Max Pages</label>
+                        <input type="number" id="maxPages" min="1" max="100" value="40">
+                    </div>
+                    <div class="input-group">
+                        <label for="maxDepth">Max Depth</label>
+                        <input type="number" id="maxDepth" min="0" max="10" value="2">
+                    </div>
+                    <div class="input-group">
+                        <label for="crawlDelay">Crawl Delay (ms)</label>
+                        <input type="number" id="crawlDelay" min="100" max="5000" value="500">
+                    </div>
+                </div>
+
+                <button id="crawlBtn" class="btn" onclick="startCrawl()">
+                    🚀 Start Crawling & Indexing
+                </button>
+
+                <div id="crawlStatus" class="status-box"></div>
+            </div>
+
+            <!-- Step 2: Ask Questions -->
+            <div class="section qa-section" id="qaSection">
+                <div class="section-title">
+                    <span class="badge">Step 2</span>
+                    <span>Ask Questions</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="question">Your Question</label>
+                    <textarea id="question" placeholder="What is this website about?"></textarea>
+                </div>
+
+                <button id="askBtn" class="btn" onclick="askQuestion()">
+                    💬 Get Answer
+                </button>
+
+                <div id="answerBox" class="answer-box"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        let indexed = false;
+        let crawlStats = {};
+
+        async function startCrawl() {
+            const url = document.getElementById('url').value;
+            const maxPages = parseInt(document.getElementById('maxPages').value);
+            const maxDepth = parseInt(document.getElementById('maxDepth').value);
+            const crawlDelay = parseInt(document.getElementById('crawlDelay').value);
+
+            if (!url) {
+                showStatus('error', '❌ Please enter a URL');
+                return;
+            }
+
+            const crawlBtn = document.getElementById('crawlBtn');
+            const statusBox = document.getElementById('crawlStatus');
+            
+            crawlBtn.disabled = true;
+            showStatus('loading', '🔄 Crawling and indexing... This may take 20-60 seconds.');
+
+            try {
+                const response = await fetch(`${API_BASE}/crawl`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        start_url: url,
+                        max_pages: maxPages,
+                        max_depth: maxDepth,
+                        crawl_delay_ms: crawlDelay
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    crawlStats = data;
+                    indexed = data.indexed;
+
+                    let statusHTML = `
+                        <h3 style="color: #28a745; margin-bottom: 15px;">✅ Success!</h3>
+                        <div class="stats">
+                            <div class="stat-item">
+                                <div class="stat-value">${data.page_count}</div>
+                                <div class="stat-label">Pages Crawled</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${data.vector_count}</div>
+                                <div class="stat-label">Chunks Indexed</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${data.skipped_count}</div>
+                                <div class="stat-label">Pages Skipped</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 15px; color: #28a745; font-weight: 600;">
+                            🎉 Ready for questions! Start asking below.
+                        </p>
+                    `;
+                    
+                    statusBox.innerHTML = statusHTML;
+                    statusBox.className = 'status-box show success';
+                    
+                    // Enable Q&A section
+                    document.getElementById('qaSection').classList.add('enabled');
+                    document.getElementById('question').focus();
+                } else {
+                    showStatus('error', `❌ Error: ${data.detail || 'Crawl failed'}`);
+                }
+            } catch (error) {
+                showStatus('error', `❌ Network error: ${error.message}`);
+            } finally {
+                crawlBtn.disabled = false;
+            }
+        }
+
+        async function askQuestion() {
+            if (!indexed) {
+                showAnswer('⚠️ Please crawl and index a website first.', [], true);
+                return;
+            }
+
+            const question = document.getElementById('question').value.trim();
+            if (!question) {
+                showAnswer('⚠️ Please enter a question.', [], true);
+                return;
+            }
+
+            const askBtn = document.getElementById('askBtn');
+            askBtn.disabled = true;
+            askBtn.textContent = '🔄 Thinking...';
+
+            try {
+                const response = await fetch(`${API_BASE}/ask`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        question: question,
+                        top_k: 6
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showAnswer(data.answer, data.sources, false, data.timings);
+                } else {
+                    showAnswer(`❌ Error: ${data.detail || 'Request failed'}`, [], true);
+                }
+            } catch (error) {
+                showAnswer(`❌ Network error: ${error.message}`, [], true);
+            } finally {
+                askBtn.disabled = false;
+                askBtn.textContent = '💬 Get Answer';
+            }
+        }
+
+        function showStatus(type, message) {
+            const statusBox = document.getElementById('crawlStatus');
+            let icon = '';
+            if (type === 'loading') icon = '<span class="spinner"></span>';
+            statusBox.innerHTML = icon + message;
+            statusBox.className = `status-box show ${type}`;
+        }
+
+        function showAnswer(answer, sources, isError, timings) {
+            const answerBox = document.getElementById('answerBox');
+            
+            let html = `
+                <div class="answer-content">
+                    <strong>Answer:</strong><br>
+                    ${answer.replace(/\n/g, '<br>')}
+                </div>
+            `;
+
+            if (sources && sources.length > 0) {
+                html += `
+                    <div class="sources">
+                        <strong>📚 Sources (${sources.length}):</strong>
+                        ${sources.map((src, i) => `
+                            <div class="source-item">
+                                <div class="source-title">[${i + 1}] ${src.title || 'Untitled'}</div>
+                                <a href="${src.url}" target="_blank" class="source-url">${src.url}</a>
+                                <div class="source-snippet">${src.snippet}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            if (timings) {
+                html += `
+                    <div class="timing">
+                        ⏱️ Response time: ${timings.total_ms.toFixed(2)}ms 
+                        (retrieval: ${timings.retrieval_ms.toFixed(2)}ms)
+                    </div>
+                `;
+            }
+
+            answerBox.innerHTML = html;
+            answerBox.className = 'answer-box show';
+        }
+
+        // Enter key to submit
+        document.getElementById('question').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                askQuestion();
+            }
+        });
+
+        // Check server health on load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                if (!response.ok) {
+                    showStatus('error', '⚠️ API server is not responding properly');
+                }
+            } catch (error) {
+                showStatus('error', '❌ Cannot connect to API server. Make sure it\'s running on port 8000.');
+            }
+        });
+    </script>
+</body>
+</html>

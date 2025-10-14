@@ -1,0 +1,62 @@
+{
+  "questions": [
+    {
+      "question": "What is this domain?",
+      "type": "answerable",
+      "expected_url": "https://example.com/",
+      "expected_keywords": [
+        "this domain"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "question": "What information is available about 'Example Domain'?",
+      "type": "answerable",
+      "expected_url": "https://example.com/",
+      "expected_keywords": [
+        "example domain"
+      ],
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the company's annual revenue in 2025?",
+      "type": "unanswerable",
+      "reason": "Financial data not in content",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who is the CEO of this organization?",
+      "type": "unanswerable",
+      "reason": "Personnel information not in content",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What are the office hours on weekends?",
+      "type": "unanswerable",
+      "reason": "Specific operational details not in content",
+      "difficulty": "medium"
+    },
+    {
+      "question": "How many employees work at the company?",
+      "type": "unanswerable",
+      "reason": "Employee count not in content",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the stock price today?",
+      "type": "unanswerable",
+      "reason": "Real-time financial data not in content",
+      "difficulty": "easy"
+    }
+  ],
+  "stats": {
+    "total": 7,
+    "answerable": 2,
+    "unanswerable": 5,
+    "pages_analyzed": 1
+  },
+  "metadata": {
+    "generator": "build_eval.py",
+    "version": "1.0"
+  }
+}

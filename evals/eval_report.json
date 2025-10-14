@@ -1,0 +1,215 @@
+{
+  "config": {
+    "top_k": 6,
+    "base_url": "http://localhost:8000",
+    "timestamp": "2025-10-13 22:42:05"
+  },
+  "metrics": {
+    "total_questions": 7,
+    "successful": 7,
+    "errors": 0,
+    "answerable": {
+      "count": 2,
+      "avg_keyword_recall": 0.0,
+      "url_found_rate": 0.0,
+      "has_answer_rate": 0.0,
+      "has_sources_rate": 0.0,
+      "avg_sources": 0.0
+    },
+    "unanswerable": {
+      "count": 5,
+      "correct_refusal_rate": 1.0,
+      "provided_closest_rate": 1.0
+    },
+    "performance": {
+      "avg_retrieval_ms": 2.575714285714286,
+      "avg_total_ms": 2.575714285714286
+    }
+  },
+  "results": [
+    {
+      "question": "What is this domain?",
+      "type": "answerable",
+      "difficulty": "easy",
+      "retrieval": {
+        "url_found": false,
+        "keyword_recall": 0.0,
+        "num_sources": 0,
+        "retrieved": false
+      },
+      "quality": {
+        "has_answer": false,
+        "has_sources": false,
+        "keywords_in_answer": 0,
+        "answer_length": 29
+      },
+      "timings": {
+        "retrieval_ms": 10.5,
+        "generation_ms": 0,
+        "total_ms": 10.5
+      },
+      "response": {
+        "answer_preview": "Not found in crawled content.",
+        "num_sources": 0,
+        "num_closest": 1
+      }
+    },
+    {
+      "question": "What information is available about 'Example Domain'?",
+      "type": "answerable",
+      "difficulty": "medium",
+      "retrieval": {
+        "url_found": false,
+        "keyword_recall": 0.0,
+        "num_sources": 0,
+        "retrieved": false
+      },
+      "quality": {
+        "has_answer": false,
+        "has_sources": false,
+        "keywords_in_answer": 0,
+        "answer_length": 29
+      },
+      "timings": {
+        "retrieval_ms": 1.51,
+        "generation_ms": 0,
+        "total_ms": 1.51
+      },
+      "response": {
+        "answer_preview": "Not found in crawled content.",
+        "num_sources": 0,
+        "num_closest": 1
+      }
+    },
+    {
+      "question": "What is the company's annual revenue in 2025?",
+      "type": "unanswerable",
+      "difficulty": "easy",
+      "retrieval": {
+        "url_found": false,
+        "keyword_recall": 0,
+        "num_sources": 0,
+        "retrieved": false
+      },
+      "quality": {
+        "correct_refusal": true,
+        "provided_closest": true,
+        "answer_length": 29
+      },
+      "timings": {
+        "retrieval_ms": 1.51,
+        "generation_ms": 0,
+        "total_ms": 1.51
+      },
+      "response": {
+        "answer_preview": "Not found in crawled content.",
+        "num_sources": 0,
+        "num_closest": 1
+      }
+    },
+    {
+      "question": "Who is the CEO of this organization?",
+      "type": "unanswerable",
+      "difficulty": "easy",
+      "retrieval": {
+        "url_found": false,
+        "keyword_recall": 0,
+        "num_sources": 0,
+        "retrieved": false
+      },
+      "quality": {
+        "correct_refusal": true,
+        "provided_closest": true,
+        "answer_length": 29
+      },
+      "timings": {
+        "retrieval_ms": 1.0,
+        "generation_ms": 0,
+        "total_ms": 1.0
+      },
+      "response": {
+        "answer_preview": "Not found in crawled content.",
+        "num_sources": 0,
+        "num_closest": 1
+      }
+    },
+    {
+      "question": "What are the office hours on weekends?",
+      "type": "unanswerable",
+      "difficulty": "medium",
+      "retrieval": {
+        "url_found": false,
+        "keyword_recall": 0,
+        "num_sources": 0,
+        "retrieved": false
+      },
+      "quality": {
+        "correct_refusal": true,
+        "provided_closest": true,
+        "answer_length": 29
+      },
+      "timings": {
+        "retrieval_ms": 1.0,
+        "generation_ms": 0,
+        "total_ms": 1.0
+      },
+      "response": {
+        "answer_preview": "Not found in crawled content.",
+        "num_sources": 0,
+        "num_closest": 1
+      }
+    },
+    {
+      "question": "How many employees work at the company?",
+      "type": "unanswerable",
+      "difficulty": "easy",
+      "retrieval": {
+        "url_found": false,
+        "keyword_recall": 0,
+        "num_sources": 0,
+        "retrieved": false
+      },
+      "quality": {
+        "correct_refusal": true,
+        "provided_closest": true,
+        "answer_length": 29
+      },
+      "timings": {
+        "retrieval_ms": 1.01,
+        "generation_ms": 0,
+        "total_ms": 1.01
+      },
+      "response": {
+        "answer_preview": "Not found in crawled content.",
+        "num_sources": 0,
+        "num_closest": 1
+      }
+    },
+    {
+      "question": "What is the stock price today?",
+      "type": "unanswerable",
+      "difficulty": "easy",
+      "retrieval": {
+        "url_found": false,
+        "keyword_recall": 0,
+        "num_sources": 0,
+        "retrieved": false
+      },
+      "quality": {
+        "correct_refusal": true,
+        "provided_closest": true,
+        "answer_length": 29
+      },
+      "timings": {
+        "retrieval_ms": 1.5,
+        "generation_ms": 0,
+        "total_ms": 1.5
+      },
+      "response": {
+        "answer_preview": "Not found in crawled content.",
+        "num_sources": 0,
+        "num_closest": 1
+      }
+    }
+  ]
+}
